@@ -3,7 +3,7 @@ export function checkHeading(str) {
 }
 
 export function replaceHeadingStars(str) {
-  return str.replace(/\*/g, "").trim();
+  return String(str).replace(/\*/g, "").trim();
 }
   
   
