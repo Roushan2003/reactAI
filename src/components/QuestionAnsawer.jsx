@@ -1,0 +1,37 @@
+import Answer from "./answer";
+const QuestionAnswer = ({ item, index }) => {
+  return (
+    <>
+      <div
+        key={index + Math.random()}
+        className={item.type == "q" ? "flex justify-end" : ""}
+      >
+        {item.type === "q" ? (
+          <li
+            key={index + Math.random()}
+            className="text-right p-1 border-8 dark:bg-zinc-700 dark:border-zinc-700 bg-red-100 border-red-100  rounded-bl-3xl rounded-br-3xl rounded-tl-3xl w-fit "
+          >
+            <Answer
+              ans={item.text}
+              totalResult={1}
+              type={item.type}
+              index={index}
+            />
+          </li>
+        ) : (
+          item.text.map((answerItem, ansIndex) => (
+            <li key={index + Math.random()} className="text-left">
+              <Answer
+                ans={answerItem}
+                totalResult={item.length}
+                type={item.type}
+                index={ansIndex}
+              />
+            </li>
+          ))
+        )}
+      </div>
+    </>
+  );
+};
+export default QuestionAnswer;
