@@ -24,7 +24,12 @@ function App() {
     if (question) {
       if (localStorage.getItem("history")) {
         let history = JSON.parse(localStorage.getItem("history"));
+        history = history.slice(0,49)
         history = [question, ...history];
+        history = history.map(
+          (item) => item.charAt(0).toUpperCase() + item.slice(1).trim()
+        );
+        history = [...new Set(history)];
         localStorage.setItem("history", JSON.stringify(history));
         setRecentHistory(history);
       } else {
@@ -52,9 +57,23 @@ function App() {
 
     response = await response.json();
 
-    let dataString = response.candidates[0].content.parts[0].text;
+    const candidate = response?.candidates?.[0];
+    const text = candidate?.content?.parts?.[0]?.text;
 
-    dataString = dataString
+    if (!text) {
+      setResult([
+        ...result,
+        { type: "q", text: question ? question : selectedHistory },
+        {
+          type: "a",
+          text: ["⚠️ No answer received from the server. Try again."],
+        },
+      ]);
+      setLoader(false);
+      return;
+    }
+
+    let dataString = text
       .split("\n")
       .map((line) => line.trim())
       .filter((line) => line.length > 0);
@@ -69,7 +88,6 @@ function App() {
       if (scrollToAns.current) {
         scrollToAns.current.scrollTop = scrollToAns.current.scrollHeight;
       }
-
     }, 500);
 
     setLoader(false);
@@ -88,19 +106,22 @@ function App() {
   }, [selectedHistory]);
 
   //dark mode feature
-  const [darkMode,setDarkMode]=useState('dark')
-  useEffect(()=>{
-    if(darkMode=='dark'){
-      document.documentElement.classList.add('dark')
-    }else{
+  const [darkMode, setDarkMode] = useState("dark");
+  useEffect(() => {
+    if (darkMode == "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
       document.documentElement.classList.remove("dark");
     }
-  },[darkMode])
+  }, [darkMode]);
 
   return (
-    <div className={darkMode=='dark'?'dark':'light'}>
+    <div className={darkMode == "dark" ? "dark" : "light"}>
       <div className="grid grid-cols-5 h-screen text-center">
-        <select onChange={(event)=>setDarkMode(event.target.value)} className="fixed text-white bg-amber-950 bottom-0 p-5">
+        <select
+          onChange={(event) => setDarkMode(event.target.value)}
+          className="fixed text-white bg-amber-950 bottom-0 p-5"
+        >
           <option value="dark">Dark</option>
           <option value="light">Light</option>
         </select>
