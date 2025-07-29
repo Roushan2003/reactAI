@@ -100,7 +100,7 @@ function App() {
   return (
     <div className={darkMode=='dark'?'dark':'light'}>
       <div className="grid grid-cols-5 h-screen text-center">
-        <select onChange={(event)=>setDarkMode(event.target.value)} className="fixed text-white bottom-0 p-5">
+        <select onChange={(event)=>setDarkMode(event.target.value)} className="fixed text-white bg-amber-950 bottom-0 p-5">
           <option value="dark">Dark</option>
           <option value="light">Light</option>
         </select>
